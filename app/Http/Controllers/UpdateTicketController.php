@@ -17,7 +17,7 @@ class UpdateTicketController extends Controller
      */
     public function __invoke(UpdateTicketAction $query)
     {
-       return $query->update();
+       return $query->update(json_decode(request()->getContent(), true));
 
     }
 }

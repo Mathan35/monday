@@ -14,10 +14,11 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'testpost',
         'check',
-        'update-ticket',
         'create-ticket',
         'get-any-changes',
-        'hello'
+        'changes',
+        'success-update-ticket',
+        'update-ticket'
 
     ];
 }
