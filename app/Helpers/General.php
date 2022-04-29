@@ -2,36 +2,48 @@
 namespace App\Helpers;
 
 use App\Models\Logs;
+use Error;
 use Illuminate\Support\Str;
+use Mockery\Undefined;
 use TBlack\MondayAPI\Token;
 use TBlack\MondayAPI\MondayBoard;
 
-trait General{
+class General{
 
-    public function findItem($payload)
+    public static function findItem($payLoad)
     {
-        $token = env('MONDAY_TOKEN');
-        $MondayBoard = new MondayBoard();
-        $MondayBoard->setToken(new Token($token));
 
-        # find ticket id
-        $query = '
-        items_by_column_values(board_id: 2570123971,column_id: "item_id", column_value: "'.$payload['event']['pulseId'].'") {
+      $token       = env('MONDAY_TOKEN');
+      $MondayBoard = new MondayBoard();
+      $MondayBoard->setToken(new Token($token));
+
+      # find ticket id
+      $query = '
+      items_by_column_values(board_id: 2570123971,column_id: "item_id", column_value: "'.$payLoad['event']['pulseId'].'") {
+        id
+        name
+        column_values {
           id
-          name
-          column_values {
-            id
-            text
-            title
-          }
-        }';
-        
-        # For Query
-        return $MondayBoard->customQuery( $query );
+          text
+          title
+        }
+      }';
+      
+      # For Query
+      $item =  $MondayBoard->customQuery( $query );
+
+      if(sizeof($item['items_by_column_values'])===0)
+      {
+        logger('running');
+        self::findItem($payLoad);
+
+      }
+      return $MondayBoard->customQuery( $query );
     }
-    public function findId($payLoad)
+
+    public static function findId($payLoad)
     {
-      $token = env('MONDAY_TOKEN');
+      $token       = env('MONDAY_TOKEN');
       $MondayBoard = new MondayBoard();
       $MondayBoard->setToken(new Token($token));
 
@@ -48,14 +60,20 @@ trait General{
          }';
 
          
- 
-         # For Query
+      # For Query
+      $item =  $MondayBoard->customQuery( $query );
+
+      if(sizeof($item['items_by_column_values'])===0)
+      {
+        self::findId($payLoad);
+      }
       return $MondayBoard->customQuery( $query );
     }
 
-    public function getUuid(){
+    public function getUuid()
+    {
 
-      $uuid = Str::uuid()->toString();
+      $uuid     = Str::uuid()->toString();
       $check_id = Logs::where('id',$uuid)->first();
 
       if($check_id){
@@ -66,9 +84,9 @@ trait General{
       }
     }
 
-    public function logs($title, $data){
+    public static function logs($title, $data){
       $log        = new Logs();
-      $log->id    = $this->getUuid();
+      $log->id    = self::getUuid();
       $log->title = $title;
       $log->data  = json_encode($data);
       $log->save();

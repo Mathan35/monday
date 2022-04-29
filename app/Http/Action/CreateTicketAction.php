@@ -7,7 +7,6 @@ use TBlack\MondayAPI\MondayBoard;
 
 class CreateTicketAction{
 
-    use General;
     public function create(){
         //recieving payload from success webhook
         $payLoad = json_decode(request()->getContent(), true);
@@ -47,6 +46,6 @@ class CreateTicketAction{
         }
 
         //update logs
-        $this->logs('create ticket ( Success -> Monday)', $payLoad);
+        General::logs('create ticket ( Success -> Monday)', $payLoad);
     }
 }

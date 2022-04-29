@@ -7,8 +7,6 @@ use TBlack\MondayAPI\MondayBoard;
 
 class UpdateTicketAction{
 
-    use General;
-
     public function update($payLoad){
 
          //getting ticket code
@@ -53,7 +51,7 @@ class UpdateTicketAction{
         }
 
         //update logs
-        $this->logs('update ticket ( Success -> Monday)', $payLoad);
+        General::logs('update ticket ( Success -> Monday)', $payLoad);
 
     }
 }

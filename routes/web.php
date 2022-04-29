@@ -28,24 +28,24 @@ Route::get('/', function () {
 })->name('home');
 
 
-// Route::get('/check', function(){
+Route::get('/check', function(){
 
-//     $payLoad = json_decode(request()->getContent(), true);
+    $payLoad = json_decode(request()->getContent(), true);
 
 
-//     $token = env('MONDAY_TOKEN');
-//     $MondayBoard = new TBlack\MondayAPI\MondayBoard();
-//     $MondayBoard->setToken(new TBlack\MondayAPI\Token($token));
+    $token = env('MONDAY_TOKEN');
+    $MondayBoard = new TBlack\MondayAPI\MondayBoard();
+    $MondayBoard->setToken(new TBlack\MondayAPI\Token($token));
 
-//     $board_id = 2570123971;
-//     $boardColumns = $MondayBoard->on($board_id)->getColumns();
-//     dd($boardColumns);
+    $board_id = 2570123971;
+    $boardColumns = $MondayBoard->on($board_id)->getColumns();
+    dd($boardColumns);
 
-//     # Insert new Item on Board
-//     $board_id = 2570123971;
-//     $id_group = 'tickets';
-//     $column_values = [ 'text' => 'Value...' ];
-// });
+    # Insert new Item on Board
+    $board_id = 2570123971;
+    $id_group = 'tickets';
+    $column_values = [ 'text' => 'Value...' ];
+});
 
 
 #Success to Monday

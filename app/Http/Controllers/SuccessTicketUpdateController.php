@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 
 class SuccessTicketUpdateController extends Controller
 {
-    use General;
     /**
      * Handle the incoming request.
      *
@@ -21,7 +20,9 @@ class SuccessTicketUpdateController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // return response()->json(request());
+        // if(request() ==='challenge'){
+            // return response()->json(request());
+        //}
 
         $payload = request()->toArray();
 
@@ -50,17 +51,18 @@ class SuccessTicketUpdateController extends Controller
           }
 
         $item = General::findItem($payload);
-
         logger($item);
+
         $ticketData = [
             'column_name'  =>  $column_name,
             'column_value' =>  $column_value,
             'id'           =>  $item['items_by_column_values'][0]['column_values'][0]['text']
         ];
+        // logger($item);
         SuccessTickets::dispatch($ticketData);
 
         //update logs
-        $this->logs('update ticket ( Monday -> Success)', $payload);
+        General::logs('update ticket ( Monday -> Success)', $payload);
 
     
     }
