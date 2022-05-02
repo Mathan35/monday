@@ -27,23 +27,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-
-Route::get('/check', function(){
-
-    $payLoad = json_decode(request()->getContent(), true);
-
-
-    $token = env('MONDAY_TOKEN');
-    $MondayBoard = new TBlack\MondayAPI\MondayBoard();
-    $MondayBoard->setToken(new TBlack\MondayAPI\Token($token));
-
-    $board_id = 2616634821;
-    $boardColumns = $MondayBoard->on($board_id)->getColumns();
-    dd($boardColumns);
-
-});
-
-
 #Success to Monday
 Route::post('/create-ticket', CreateTicketController::class);
 
