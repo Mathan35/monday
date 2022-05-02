@@ -51,7 +51,6 @@ class SuccessTicketUpdateController extends Controller
           }
 
         $item = General::findItem($payload);
-        logger($item);
 
         $ticketData = [
             'column_name'  =>  $column_name,
