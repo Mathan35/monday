@@ -12,10 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'testpost',
         'check',
         'create-ticket',
-        'get-any-changes',
         'changes',
         'success-update-ticket',
         'update-ticket'

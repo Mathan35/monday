@@ -37,14 +37,10 @@ Route::get('/check', function(){
     $MondayBoard = new TBlack\MondayAPI\MondayBoard();
     $MondayBoard->setToken(new TBlack\MondayAPI\Token($token));
 
-    $board_id = 2570123971;
+    $board_id = 2616634821;
     $boardColumns = $MondayBoard->on($board_id)->getColumns();
     dd($boardColumns);
 
-    # Insert new Item on Board
-    $board_id = 2570123971;
-    $id_group = 'tickets';
-    $column_values = [ 'text' => 'Value...' ];
 });
 
 
@@ -52,9 +48,6 @@ Route::get('/check', function(){
 Route::post('/create-ticket', CreateTicketController::class);
 
 Route::post('/update-ticket', UpdateTicketController::class);
-
-#Monday to Success
-// Route::post('/get-any-changes',SuccessTicketStoreController::class);
 
 Route::post('/success-update-ticket', SuccessTicketUpdateController::class);
     

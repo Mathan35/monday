@@ -21,30 +21,29 @@ class UpdateTicketAction{
          $MondayBoard->setToken(new Token($token));
      
          # Insert new Item on Board
-         $board_id = 2570123971;
          $id_group = 'tickets';
-         
 
- 
          # For Query
          $items = General::findId($payLoad);
-         logger($items);
+
          # For update Item
-         $item_id = $items['items_by_column_values'][0]['column_values'][4]['text'];
+         $item_id = $items['items_by_column_values'][0]['column_values'][3]['text'];
          $column_values = [ 
-             'text'    => isset($code['code']) ? $code['code'] : 'NULL',
-             'description' => $payLoad['description']===null?'NULL':$payLoad['description'],
-             'visibility5' => $payLoad['visibility'],
-             'due_date' => $payLoad['due_date']===null?'':$payLoad['due_date'],
-             'status56'  =>   $status['value'] ,
-             'priority3'    =>  $priority['value'],
-             'type3'    =>  $type['value'],
-             'text40'    =>  isset($project['title']) ? $project['title'] : 'NULL',
+            'ticket_id' => $payLoad['id'],
+            'code' => isset($code['code']) ? $code['code'] : 'NULL',
+            'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
+            'visibility' => $payLoad['visibility'],
+            'due_date' => $payLoad['due_date']===null?'':$payLoad['due_date'],
+            'status' => $status['value'] ,
+            'priority' => $priority['value'],
+            'type' => $type['value'],
+            'text4' => isset($project['title']) ? $project['title'] : 'NULL',
          ];
+
          if($payLoad['parent_type'] != NULL){
  
              $updateResult = $MondayBoard
-                            ->on($board_id)
+                            ->on(config('services.monday.board_id'))
                             ->group($id_group)
                             ->changeMultipleColumnValues($item_id, $column_values );
      

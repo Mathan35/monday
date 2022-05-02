@@ -2,8 +2,10 @@
 namespace App\Http\Action;
 
 use App\Helpers\General;
+use Illuminate\Support\Arr;
 use TBlack\MondayAPI\Token;
 use TBlack\MondayAPI\MondayBoard;
+use Illuminate\Support\Facades\Http;
 
 class CreateTicketAction{
 
@@ -23,19 +25,18 @@ class CreateTicketAction{
         $MondayBoard->setToken(new Token($token));
     
         # Insert new Item on Board
-        $board_id = 2570123971;
-        $id_group = 'Success tickets';
+        $board_id = 2616634821;
+        $id_group = 'tickets';
         $column_values = [ 
-            'id'    => $payLoad['id'],
-            'text'    => isset($code['code']) ? $code['code'] : 'NULL',
-            'text_1'  => $payLoad['title'],
-            'description' => $payLoad['description']===null?'NULL':$payLoad['description'],
-            'visibility5' => $payLoad['visibility'],
+            'ticket_id' => $payLoad['id'],
+            'code' => isset($code['code']) ? $code['code'] : 'NULL',
+            'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
+            'visibility' => $payLoad['visibility'],
             'due_date' => $payLoad['due_date']===null?'':$payLoad['due_date'],
-            'status56'  =>   $status['value'] ,
-            'priority3'    =>  $priority['value'],
-            'type3'    =>  $type['value'],
-            'text40'    =>  isset($project['title']) ? $project['title'] : 'NULL',
+            'status' => $status['value'] ,
+            'priority' => $priority['value'],
+            'type' => $type['value'],
+            'text4' => isset($project['title']) ? $project['title'] : 'NULL',
         ];
         
         if($payLoad['parent_type'] != NULL){
@@ -44,6 +45,7 @@ class CreateTicketAction{
                         ->group($id_group)
                         ->addItem( $payLoad['title'], $column_values);
         }
+    //    $data = Http::withoutVerifying()->post('https://local-apps.success.test/monday?slug=acmeinc&&itemId='.Arr::get($addResult, 'create_item.id').'&&ticketId='.$payLoad['id'].'');
 
         //update logs
         General::logs('create ticket ( Success -> Monday)', $payLoad);

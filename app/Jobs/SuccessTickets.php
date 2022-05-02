@@ -32,6 +32,6 @@ class SuccessTickets implements ShouldQueue
      */
     public function handle()
     {
-        Http::withoutVerifying()->patch('https://local-api.success.test/v1/acmeinc/public/monday', $this->ticketData);
+        Http::withoutVerifying()->patch('https://local-apps.success.test/monday?slug=acmeinc', $this->ticketData);
     }
 }

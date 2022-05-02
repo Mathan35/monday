@@ -31,7 +31,8 @@ return [
     ],
     
     'monday' => [
-        'token' => env('MONDAY_TOKEN', null)
+        'token' => env('MONDAY_TOKEN', null),
+        'board_id' => env('MONDAY_BOARD_ID', null)
     ]
 
 ];
