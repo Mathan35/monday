@@ -33,7 +33,7 @@ class UpdateTicketAction{
             'code' => isset($code['code']) ? $code['code'] : 'NULL',
             'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
             'visibility' => $payLoad['visibility'],
-            'due_date' => $payLoad['due_date']===null?'':$payLoad['due_date'],
+            'due_date2' => $payLoad['due_date']===null?'':$payLoad['due_date'],
             'status' => $status['value'] ,
             'priority' => $priority['value'],
             'type' => $type['value'],

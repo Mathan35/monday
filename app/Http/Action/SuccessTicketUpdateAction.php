@@ -12,8 +12,8 @@ class SuccessTicketUpdateAction{
         $item = General::findItem($payload);
 
         $ticketData = [
-            'column_name' => $payload['event']['columnId'],
-            'column_value' => Arr::get($payload,'event.columnId')==='due_data'?Arr::get($payload,'event.value.date') : Arr::get($payload,'event.value.label.text'),
+            'column_name' => $payload['event']['columnId']==='due_date2' ? 'due_date' : $payload['event']['columnId'],
+            'column_value' => Arr::get($payload,'event.columnId')==='due_date2'?Arr::get($payload,'event.value.date') : Arr::get($payload,'event.value.label.text'),
             'id' => $item['items_by_column_values'][0]['column_values'][0]['text']
         ];
         
