@@ -25,7 +25,7 @@ class CreateTicketAction{
         $MondayBoard->setToken(new Token($token));
     
         # Insert new Item on Board
-        $board_id = 2616634821;
+        $board_id = config('services.monday.board_id');
         $id_group = 'tickets';
         $column_values = [ 
             'ticket_id' => $payLoad['id'],
@@ -45,7 +45,6 @@ class CreateTicketAction{
                         ->group($id_group)
                         ->addItem( $payLoad['title'], $column_values);
         }
-    //    $data = Http::withoutVerifying()->post('https://local-apps.success.test/monday?slug=acmeinc&&itemId='.Arr::get($addResult, 'create_item.id').'&&ticketId='.$payLoad['id'].'');
 
         //update logs
         General::logs('create ticket ( Success -> Monday)', $payLoad);
