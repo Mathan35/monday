@@ -12,7 +12,7 @@ class CreateTicketAction{
     public function create(){
         //recieving payload from success webhook
         $payLoad = json_decode(request()->getContent(), true);
-        
+
         //getting ticket code
         $code = $payLoad['linked_ticket'];
         $status = $payLoad['status'];
@@ -23,11 +23,11 @@ class CreateTicketAction{
         $token = env('MONDAY_TOKEN');
         $MondayBoard = new MondayBoard();
         $MondayBoard->setToken(new Token($token));
-    
+
         # Insert new Item on Board
         $board_id = config('services.monday.board_id');
         $id_group = 'tickets';
-        $column_values = [ 
+        $column_values = [
             'ticket_id' => $payLoad['id'],
             'code' => isset($code['code']) ? $code['code'] : 'NULL',
             'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
@@ -38,7 +38,7 @@ class CreateTicketAction{
             'type' => $type['value'],
             'text4' => isset($project['title']) ? $project['title'] : 'NULL',
         ];
-        
+
         if($payLoad['parent_type'] != NULL){
             $addResult = $MondayBoard
                         ->on($board_id)

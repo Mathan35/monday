@@ -94,7 +94,7 @@ class General
   public static function logs($title, $data)
   {
     $log = new Logs();
-    $log->id = self::getUuid();
+    $log->id = Str::uuid()->toString();
     $log->title = $title;
     $log->data = json_encode($data);
     $log->save();
