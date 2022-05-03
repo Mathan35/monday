@@ -82,11 +82,11 @@ class General
   public function getUuid()
   {
     $uuid = Str::uuid()->toString();
-    $checkId = Logs::where('id', $uuid)->first();
-
-    if ($checkId) {
-      return $this->getUuid();
-    }
+//    $checkId = Logs::where('id', $uuid)->first();
+//
+//    if ($checkId) {
+//      return self::getUuid();
+//    }
 
     return $uuid;
   }
@@ -94,7 +94,7 @@ class General
   public static function logs($title, $data)
   {
     $log = new Logs();
-    $log->id = self::getUuid();
+    $log->id = Str::uuid()->toString();
     $log->title = $title;
     $log->data = json_encode($data);
     $log->save();
