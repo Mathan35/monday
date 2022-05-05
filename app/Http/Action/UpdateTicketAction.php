@@ -15,11 +15,11 @@ class UpdateTicketAction{
          $type = $payLoad['type'];
          $priority = $payLoad['priority'];
          $project = $payLoad['parent'];
-         
+
          $token = env('MONDAY_TOKEN');
          $MondayBoard = new MondayBoard();
          $MondayBoard->setToken(new Token($token));
-     
+
          # Insert new Item on Board
          $id_group = 'tickets';
 
@@ -27,9 +27,10 @@ class UpdateTicketAction{
          $items = General::findId($payLoad);
 
          # For update Item
-         $item_id = $items['items_by_column_values'][0]['column_values'][3]['text'];
-         $column_values = [ 
+         $item_id = $items['items_by_column_values'][0]['id'];
+         $column_values = [
             'ticket_id' => $payLoad['id'],
+            'name' => $payLoad['title'],
             'code' => isset($code['code']) ? $code['code'] : 'NULL',
             'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
             'visibility' => $payLoad['visibility'],
@@ -41,12 +42,12 @@ class UpdateTicketAction{
          ];
 
          if($payLoad['parent_type'] != NULL){
- 
+
              $updateResult = $MondayBoard
                             ->on(config('services.monday.board_id'))
                             ->group($id_group)
                             ->changeMultipleColumnValues($item_id, $column_values );
-     
+
         }
 
         //update logs

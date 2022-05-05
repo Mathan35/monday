@@ -25,11 +25,12 @@ Route::get('/', function () {
 })->name('home');
 
 #Success to Monday
-Route::post('/create-ticket', CreateTicketController::class);
+Route::middleware(\App\Http\Middleware\AbortDuplicateRequest::class)->group(function () {
+    Route::post('/create-ticket', CreateTicketController::class)->name('create-ticket');
+    Route::post('/update-ticket', UpdateTicketController::class)->name('update-ticket');
+});
 
-Route::post('/update-ticket', UpdateTicketController::class);
-
-Route::post('/success-update-ticket', SuccessTicketUpdateController::class);
+Route::post('/success-update-ticket', SuccessTicketUpdateController::class)->name('success-update-ticket');
 
 
 

@@ -96,7 +96,7 @@ class General
     $log = new Logs();
     $log->id = Str::uuid()->toString();
     $log->title = $title;
-    $log->data = json_encode($data);
+    $log->data = $data;
     $log->save();
   }
 }

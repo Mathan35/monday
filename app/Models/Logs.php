@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Logs extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['data'];
+
+    protected $casts = ['data' => 'array'];
 }
