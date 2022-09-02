@@ -6,10 +6,12 @@ use Illuminate\Support\Arr;
 use TBlack\MondayAPI\Token;
 use TBlack\MondayAPI\MondayBoard;
 use Illuminate\Support\Facades\Http;
+use Monolog\Logger;
 
 class CreateTicketAction{
 
-    public function create(){
+    public function create()
+    {
         //recieving payload from success webhook
         $payLoad = json_decode(request()->getContent(), true);
 
@@ -20,31 +22,43 @@ class CreateTicketAction{
         $priority = $payLoad['priority'];
         $project = $payLoad['parent'];
 
-        $token = env('MONDAY_TOKEN');
-        $MondayBoard = new MondayBoard();
-        $MondayBoard->setToken(new Token($token));
-
         # Insert new Item on Board
-        $board_id = config('services.monday.board_id');
-        $id_group = 'tickets';
         $column_values = [
-            'ticket_id' => $payLoad['id'],
-            'code' => isset($code['code']) ? $code['code'] : 'NULL',
-            'text1' => $payLoad['description']===null?'NULL':$payLoad['description'],
-            'visibility' => $payLoad['visibility'],
-            'due_date2' => $payLoad['due_date']===null?'':$payLoad['due_date'],
-            'status' => $status['value'] ,
+            'name' => Arr::get($payLoad, 'title'),
+            'id' => Arr::get($payLoad, 'id'),
+            'code' => Arr::get($code, 'code'),
+            'description' => Arr::get($payLoad, 'description'),
+            'visibility' => Arr::get($payLoad, 'visibility'),
+            'due_date' => Arr::get($payLoad, 'due_data'),
+            'status' => Arr::get($status, 'value'),
             'priority' => $priority['value'],
-            'type' => $type['value'],
-            'text4' => isset($project['title']) ? $project['title'] : 'NULL',
+            'type' => Arr::get($type, 'value'),
+            'project' => Arr::get($project, 'title'),
         ];
 
-        if($payLoad['parent_type'] != NULL){
-            $addResult = $MondayBoard
-                        ->on($board_id)
-                        ->group($id_group)
-                        ->addItem( $payLoad['title'], $column_values);
-        }
+
+        $token = env('MONDAY_TOKEN');
+        $apiUrl = 'https://api.monday.com/v2';
+        $headers = ['Content-Type: application/json', 'Authorization: ' . $token];
+    
+    
+        $query ='mutation {
+            create_item (board_id: 2645712561, group_id: "topics", item_name: "'.$payLoad['title'].'", column_values: "'.addslashes(json_encode($column_values)).'"){
+                id,
+            }
+            
+        }';
+    
+        $data = @file_get_contents($apiUrl, false, stream_context_create([
+          'http' => [
+            'method' => 'POST',
+            'header' => $headers,
+            'content' => json_encode(['query' => $query]),
+        ]
+        ]));
+    
+        $responseContent = json_decode($data, true);
+
 
         //update logs
         General::logs('create ticket ( Success -> Monday)', $payLoad);

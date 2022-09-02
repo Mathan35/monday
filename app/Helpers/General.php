@@ -32,8 +32,9 @@ class General
 
     # For Query
     $item = $mondayBoard->customQuery($query);
+
     $count = 1;
-    if (!Arr::get($item, 'items_by_column_values')) {
+    if (!Arr::get($item, 'items_by_column_values.0')) {
       if($count>10){
         return;
       }
@@ -41,7 +42,6 @@ class General
       sleep(40);
       self::findItem($payLoad);
     }
-
     return $mondayBoard->customQuery($query);
   }
 
@@ -49,10 +49,9 @@ class General
   {
     $mondayBoard = new MondayBoard();
     $mondayBoard->setToken(new Token(config('services.monday.token')));
-
     #finfin item id
     $query = '
-         items_by_column_values(board_id: '.config('services.monday.board_id').',column_id: "ticket_id", column_value: "' . Arr::get($payLoad, 'id'). '") {
+         items_by_column_values(board_id: '.config('services.monday.board_id').',column_id: "id", column_value: "' . Arr::get($payLoad, 'id'). '") {
            id
            name
            column_values {
@@ -65,9 +64,8 @@ class General
 
     # For Query
     $item = $mondayBoard->customQuery($query);
-
     $count = 1;
-    if (!Arr::get($item, 'items_by_column_values')) {
+    if (!Arr::get($item, 'items_by_column_values.0')) {
       if($count>10){
         return;
       }
@@ -96,7 +94,7 @@ class General
     $log = new Logs();
     $log->id = Str::uuid()->toString();
     $log->title = $title;
-    $log->data = json_encode($data);
+    $log->data = $data;
     $log->save();
   }
 }

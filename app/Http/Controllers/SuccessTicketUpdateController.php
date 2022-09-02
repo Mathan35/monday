@@ -25,7 +25,6 @@ class  SuccessTicketUpdateController extends Controller
         if($request->challenge){
             return response()->json(request());
         }
-
         return $query->update(request()->toArray());
     }
 }

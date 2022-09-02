@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\CreateTicketController;
-use App\Http\Controllers\SuccessTicketStoreController;
-use App\Http\Controllers\SuccessTicketUpdateController;
-use App\Http\Controllers\UpdateTicketController;
-use App\Http\Controllers\WebhookClientController;
+use App\Models\Logs;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckDuplicateRequest;
+use App\Http\Controllers\CreateTicketController;
+use App\Http\Controllers\UpdateTicketController;
+use App\Http\Controllers\WebhookClientController;
+use App\Http\Controllers\SuccessTicketStoreController;
+use App\Http\Controllers\SuccessTicketUpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,14 +27,11 @@ Route::get('/', function () {
 })->name('home');
 
 #Success to Monday
-Route::post('/create-ticket', CreateTicketController::class);
+Route::post('/create-ticket', CreateTicketController::class)->middleware(CheckDuplicateRequest::class)->name('create-ticket');
+Route::post('/update-ticket', UpdateTicketController::class)->middleware(CheckDuplicateRequest::class)->name('update-ticket');
 
-Route::post('/update-ticket', UpdateTicketController::class);
-
+#Monday to Success
 Route::post('/success-update-ticket', SuccessTicketUpdateController::class);
-
-
-
 
 
 
