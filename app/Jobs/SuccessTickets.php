@@ -41,14 +41,23 @@ class SuccessTickets implements ShouldQueue
             return true;
         }
 
-        if ($column != 'due_date') {
+        if ($this->ticketData['type'] === 'update_column_value' && !in_array($column, ['due_date', 'name', 'description'])) {
             $meta = Http::withoutVerifying()->withToken(config('services.success.public_api_token'))->get(config('services.success.public_api_url') . '/metas?filter[type]=ticket_' . $column)->json('data');
             $meta = collect($meta)->firstWhere('value', $this->ticketData['column_value']);
             $value = Arr::get($meta, 'id', Arr::get(Arr::first($meta), 'id'));
         }
 
-        if (!Arr::get($this->ticketData, 'name')) {
-            $ticket = Http::withoutVerifying()->withToken(config('services.success.public_api_token'))->get(config('services.success.public_api_url') . '/tickets/' . $this->ticketData['id'])->json();
+        if ($this->ticketData['type'] === 'update_name') {
+            $payload = [
+                'title' => Arr::get($this->ticketData, 'name')
+            ];
+        }
+
+        if ($this->ticketData['type'] === 'update_column_value') {
+            $payload = [
+                'title' => Arr::get($this->ticketData, 'name'),
+                in_array($column, ['due_date', 'name', 'description']) ? $column : $column . '_id' => $value,
+            ];
         }
 
         Http::withoutVerifying()
@@ -57,10 +66,7 @@ class SuccessTickets implements ShouldQueue
                 'X-Requested-With' => 'XMLHttpRequest',
             ])
             ->withToken(config('services.success.public_api_token'))
-            ->patch(config('services.success.public_api_url') . '/tickets/' . $this->ticketData['id'], [
-                'title' => Arr::get($this->ticketData, 'name') ?? Arr::get($ticket, 'data.title'),
-                $column === 'due_date' ? 'due_date' : $column . '_id' => $value,
-            ]);
+            ->patch(config('services.success.public_api_url') . '/tickets/' . $this->ticketData['id'], $payload);
 
         return true;
     }

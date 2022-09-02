@@ -27,11 +27,20 @@ Route::get('/', function () {
 })->name('home');
 
 #Success to Monday
+<<<<<<< HEAD
 Route::post('/create-ticket', CreateTicketController::class)->middleware(CheckDuplicateRequest::class)->name('create-ticket');
 Route::post('/update-ticket', UpdateTicketController::class)->middleware(CheckDuplicateRequest::class)->name('update-ticket');
 
 #Monday to Success
 Route::post('/success-update-ticket', SuccessTicketUpdateController::class);
+=======
+Route::middleware(\App\Http\Middleware\AbortDuplicateRequest::class)->group(function () {
+    Route::post('/create-ticket', CreateTicketController::class)->name('create-ticket');
+    Route::post('/update-ticket', UpdateTicketController::class)->name('update-ticket');
+});
+
+Route::post('/success-update-ticket', SuccessTicketUpdateController::class)->name('success-update-ticket');
+>>>>>>> 9fad4a3310e9e7588588e6f06f5fe107919e9353
 
 
 
